@@ -35,7 +35,6 @@ public class WeaponSway : MonoBehaviour
     {
         originalRotation = transform.localRotation;
         originalPosition = transform.localPosition;
-        Application.targetFrameRate = 90;
     }
 
     private void Update()
@@ -49,7 +48,7 @@ public class WeaponSway : MonoBehaviour
         Vector3 targetPosition = originalPosition;
         if (playerRigidbody.velocity.magnitude > 0)
         {
-            bobCurvePosition += Time.deltaTime * (playerController.Grounded ? playerRigidbody.velocity.magnitude * bobSpeedMultiplier : 1f) + 0.01f;
+            bobCurvePosition += Time.deltaTime * (playerController.Grounded && !playerController.IsDashing ? playerRigidbody.velocity.magnitude * bobSpeedMultiplier : 1f) + 0.01f;
 
             float xAdjustment = (Mathf.Cos(bobCurvePosition) * bobIntensity.x * (playerController.Grounded ? 1 : 0))
                 - (moveX * travelIntensity.x);

@@ -11,15 +11,16 @@ public class InputManager : MonoBehaviour
 #if ENABLE_INPUT_SYSTEM
 	[SerializeField] private PlayerInput playerInput;
 	[SerializeField] private string fireActionName;
+
 	private InputAction fireAction;
 	private bool firePressedState = false;
 	public void OnMove(InputValue value)
 	{
 		starterAssetsInputs.MoveInput(value.Get<Vector2>());
-		if(swayModule != null)
-        {
+		if (swayModule != null)
+		{
 			swayModule.UpdateMoveInput(value.Get<Vector2>());
-        }
+		}
 	}
 
 	public void OnLook(InputValue value)
@@ -40,6 +41,11 @@ public class InputManager : MonoBehaviour
 	{
 		starterAssetsInputs.SprintInput(value.isPressed);
 	}
+
+	public void OnDash(InputValue value)
+    {
+		starterAssetsInputs.DashInput(value.isPressed);
+    }
 
 	public void OnFire()
     {

@@ -9,6 +9,7 @@ namespace StarterAssets
 		public Vector2 look;
 		public bool jump;
 		public bool sprint;
+		public bool dash;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -34,6 +35,11 @@ namespace StarterAssets
 		{
 			jump = newJumpState;
 		}
+
+		public void DashInput(bool newDashState)
+        {
+			dash = newDashState;
+        }
 
 		public void SprintInput(bool newSprintState)
 		{

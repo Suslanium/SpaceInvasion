@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using System.Collections;
 #if ENABLE_INPUT_SYSTEM
 using UnityEngine.InputSystem;
 #endif
@@ -20,6 +21,12 @@ namespace StarterAssets
 		public float RotationSpeed = 1.0f;
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
+		[Tooltip("Dash speed")]
+		public float DashSpeed = 100.0f;
+		[Tooltip("Dash length")]
+		public float DashLength = 0.1f;
+		[Tooltip("Dash timeout")]
+		public float DashTimeout = 1f;
 
 		[Space(10)]
 		[Tooltip("The height the player can jump")]
@@ -64,7 +71,17 @@ namespace StarterAssets
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
 
-	
+		private bool _isDashing = false;
+		private bool _canDash = true;
+		private Vector3 _currentDashDirection;
+
+		public bool IsDashing
+        {
+			get
+            {
+				return _isDashing;
+            }
+        }
 #if ENABLE_INPUT_SYSTEM
 		private PlayerInput _playerInput;
 #endif
@@ -115,6 +132,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			Dash();
 		}
 
 		private void LateUpdate()
@@ -151,98 +169,120 @@ namespace StarterAssets
 			}
 		}
 
+		private void Dash()
+		{
+			if (_input.dash && _canDash && !_isDashing)
+			{
+				StartCoroutine(InvokeDash());
+			}
+			else if (_input.dash && !_canDash)
+            {
+				_input.dash = false;
+            }
+			if (_isDashing)
+            {
+				_controller.Move(_currentDashDirection.normalized * (DashSpeed * Time.deltaTime));
+            }
+        }
+
 		private void Move()
 		{
-			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
-
-			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
-
-			// note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-			// if there is no input, set the target speed to 0
-			if (_input.move == Vector2.zero) targetSpeed = 0.0f;
-
-			// a reference to the players current horizontal velocity
-			float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
-
-			float speedOffset = 0.1f;
-			float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
-
-			// accelerate or decelerate to target speed
-			if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
+			if (!_isDashing)
 			{
-				// creates curved result rather than a linear one giving a more organic speed change
-				// note T in Lerp is clamped, so we don't need to clamp our speed
-				_speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
+				// set target speed based on move speed, sprint speed and if sprint is pressed
+				float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
 
-				// round speed to 3 decimal places
-				_speed = Mathf.Round(_speed * 1000f) / 1000f;
+				// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
+
+				// note: Vector2's == operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+				// if there is no input, set the target speed to 0
+				if (_input.move == Vector2.zero) targetSpeed = 0.0f;
+
+				// a reference to the players current horizontal velocity
+				float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
+
+				float speedOffset = 0.1f;
+				float inputMagnitude = _input.analogMovement ? _input.move.magnitude : 1f;
+
+				// accelerate or decelerate to target speed
+				if (currentHorizontalSpeed < targetSpeed - speedOffset || currentHorizontalSpeed > targetSpeed + speedOffset)
+				{
+					// creates curved result rather than a linear one giving a more organic speed change
+					// note T in Lerp is clamped, so we don't need to clamp our speed
+					_speed = Mathf.Lerp(currentHorizontalSpeed, targetSpeed * inputMagnitude, Time.deltaTime * SpeedChangeRate);
+
+					// round speed to 3 decimal places
+					_speed = Mathf.Round(_speed * 1000f) / 1000f;
+				}
+				else
+				{
+					_speed = targetSpeed;
+				}
+
+				// normalise input direction
+				Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+
+				// note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
+				// if there is a move input rotate player when the player is moving
+				if (_input.move != Vector2.zero)
+				{
+					// move
+					inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
+				}
+
+				// move the player
+				_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 			}
-			else
-			{
-				_speed = targetSpeed;
-			}
-
-			// normalise input direction
-			Vector3 inputDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
-
-			// note: Vector2's != operator uses approximation so is not floating point error prone, and is cheaper than magnitude
-			// if there is a move input rotate player when the player is moving
-			if (_input.move != Vector2.zero)
-			{
-				// move
-				inputDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
-			}
-
-			// move the player
-			_controller.Move(inputDirection.normalized * (_speed * Time.deltaTime) + new Vector3(0.0f, _verticalVelocity, 0.0f) * Time.deltaTime);
 		}
 
 		private void JumpAndGravity()
 		{
-			if (Grounded)
+			if (!_isDashing)
 			{
-				// reset the fall timeout timer
-				_fallTimeoutDelta = FallTimeout;
-
-				// stop our velocity dropping infinitely when grounded
-				if (_verticalVelocity < 0.0f)
+				if (Grounded)
 				{
-					_verticalVelocity = -2f;
+					// reset the fall timeout timer
+					_fallTimeoutDelta = FallTimeout;
+
+					// stop our velocity dropping infinitely when grounded
+					if (_verticalVelocity < 0.0f)
+					{
+						_verticalVelocity = -2f;
+					}
+
+					// Jump
+					if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+					{
+						// the square root of H * -2 * G = how much velocity needed to reach desired height
+						_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+					}
+
+					// jump timeout
+					if (_jumpTimeoutDelta >= 0.0f)
+					{
+						_jumpTimeoutDelta -= Time.deltaTime;
+					}
+				}
+				else
+				{
+					// reset the jump timeout timer
+					_jumpTimeoutDelta = JumpTimeout;
+
+					// fall timeout
+					if (_fallTimeoutDelta >= 0.0f)
+					{
+						_fallTimeoutDelta -= Time.deltaTime;
+					}
+
+					// if we are not grounded, do not jump
+					_input.jump = false;
 				}
 
-				// Jump
-				if (_input.jump && _jumpTimeoutDelta <= 0.0f)
+				// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
+				if (_verticalVelocity < _terminalVelocity)
 				{
-					// the square root of H * -2 * G = how much velocity needed to reach desired height
-					_verticalVelocity = Mathf.Sqrt(JumpHeight * -2f * Gravity);
+					_verticalVelocity += Gravity * Time.deltaTime;
 				}
-
-				// jump timeout
-				if (_jumpTimeoutDelta >= 0.0f)
-				{
-					_jumpTimeoutDelta -= Time.deltaTime;
-				}
-			}
-			else
-			{
-				// reset the jump timeout timer
-				_jumpTimeoutDelta = JumpTimeout;
-
-				// fall timeout
-				if (_fallTimeoutDelta >= 0.0f)
-				{
-					_fallTimeoutDelta -= Time.deltaTime;
-				}
-
-				// if we are not grounded, do not jump
-				_input.jump = false;
-			}
-
-			// apply gravity over time if under terminal (multiply by delta time twice to linearly speed up over time)
-			if (_verticalVelocity < _terminalVelocity)
-			{
-				_verticalVelocity += Gravity * Time.deltaTime;
 			}
 		}
 
@@ -264,5 +304,18 @@ namespace StarterAssets
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
+
+		private IEnumerator InvokeDash()
+        {
+			_currentDashDirection = CinemachineCameraTarget.transform.forward;
+			_input.dash = false;
+			_canDash = false;
+			_isDashing = true;
+			yield return new WaitForSeconds(DashLength);
+			_isDashing = false;
+			yield return new WaitForSeconds(DashTimeout);
+			_canDash = true;
+			yield return null;
+        }
 	}
 }

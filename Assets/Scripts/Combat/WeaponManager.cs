@@ -8,12 +8,14 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private Cinemachine.CinemachineVirtualCamera virtualCamera;
     [SerializeField] private float defaultFOV;
     [SerializeField] private float aimFOV;
+    [SerializeField] private float dashFOV;
     [SerializeField] private float FOVChangeSpeed;
     [SerializeField] private Cinemachine.NoiseSettings defaultNoise;
     [SerializeField] private Cinemachine.NoiseSettings aimNoise;
     [Header("Player-related settings")]
     [SerializeField] private Transform weaponParent;
     [SerializeField] private WeaponSway swayModule;
+    [SerializeField] private Recoil recoilModule;
     [SerializeField] private StarterAssets.FirstPersonController playerController;
     private GameObject currentWeaponGameobject;
     private Firearm currentWeaponScript;
@@ -46,6 +48,10 @@ public class WeaponManager : MonoBehaviour
             newWeapon.transform.localEulerAngles = Vector3.zero;
 
             currentWeaponScript = newWeapon.GetComponentInChildren<Firearm>();
+            if (recoilModule != null)
+            {
+                currentWeaponScript.Recoil = recoilModule;
+            }
             currentWeaponGameobject = newWeapon;
             ResetAim();
         }
@@ -75,7 +81,7 @@ public class WeaponManager : MonoBehaviour
     {
         if(virtualCamera != null)
         {
-            virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, currentTargetFOV, Time.deltaTime * FOVChangeSpeed);
+            virtualCamera.m_Lens.FieldOfView = Mathf.Lerp(virtualCamera.m_Lens.FieldOfView, !playerController.IsDashing ? currentTargetFOV : dashFOV, Time.deltaTime * FOVChangeSpeed);
         }
     }
 
@@ -83,6 +89,10 @@ public class WeaponManager : MonoBehaviour
     {
         currentTargetFOV = defaultFOV;
         swayModule.SetAimingState(false);
+        if (recoilModule != null)
+        {
+            recoilModule.SetRecoilSpecs(currentWeaponScript.RotationalRecoil, currentWeaponScript.PositionalRecoil, currentWeaponScript.RecoilSnappiness, currentWeaponScript.RecoilReturnSpeed);
+        }
         playerController.MoveSpeed = currentWeaponScript.MoveSpeed;
         playerController.SprintSpeed = currentWeaponScript.SprintSpeed;
         if (virtualCamera != null)
@@ -142,11 +152,19 @@ public class WeaponManager : MonoBehaviour
             {
                 playerController.MoveSpeed = currentWeaponScript.AimSpeed;
                 playerController.SprintSpeed = currentWeaponScript.AimSpeed;
+                if (recoilModule != null)
+                {
+                    recoilModule.SetRecoilSpecs(currentWeaponScript.RotationalAimRecoil, currentWeaponScript.PositionalAimRecoil, currentWeaponScript.RecoilSnappiness, currentWeaponScript.RecoilReturnSpeed);
+                }
             }
             else
             {
                 playerController.MoveSpeed = currentWeaponScript.MoveSpeed;
                 playerController.SprintSpeed = currentWeaponScript.SprintSpeed;
+                if (recoilModule != null)
+                {
+                    recoilModule.SetRecoilSpecs(currentWeaponScript.RotationalRecoil, currentWeaponScript.PositionalRecoil, currentWeaponScript.RecoilSnappiness, currentWeaponScript.RecoilReturnSpeed);
+                }
             }
         }
     }

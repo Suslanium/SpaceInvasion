@@ -2,10 +2,11 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator), typeof(AudioSource))]
-public class Firearm : MonoBehaviour
+public abstract class Firearm : MonoBehaviour
 {
     private Animator animator;
     private AudioSource audioSource;
+    private Recoil recoilModule;
     [Header("Animator-related settings")]
     [SerializeField] private string shootStateName;
     [SerializeField] private string reloadStateName;
@@ -13,6 +14,8 @@ public class Firearm : MonoBehaviour
     [SerializeField] private string equipStateName;
     [Header("Firearm sounds")]
     [SerializeField] private AudioClip firingSound;
+    [SerializeField] private bool hasHoldingFireSound;
+    [SerializeField] private AudioClip holdingFireSound;
     [SerializeField] private AudioClip reloadSound;
     [SerializeField] private AudioClip equipSound;
     [Header("Weapon specs")]
@@ -21,6 +24,12 @@ public class Firearm : MonoBehaviour
     [SerializeField] private float equipTime;
     [SerializeField] private bool holdingIsAllowed;
     [SerializeField] private float aimSpeed;
+    [SerializeField] private Vector3 rotationalRecoil;
+    [SerializeField] private Vector3 aimRotationalRecoil;
+    [SerializeField] private Vector3 positionalRecoil;
+    [SerializeField] private Vector3 aimPositionalRecoil;
+    [SerializeField] private float recoilSnappiness;
+    [SerializeField] private float recoilReturnSpeed;
     [Header("Positions for procedural animations")]
     [SerializeField] private Transform aimPosition;
     [SerializeField] private Transform originalPosition;
@@ -55,6 +64,55 @@ public class Firearm : MonoBehaviour
         get
         {
             return holdingIsAllowed;
+        }
+    }
+    public Recoil Recoil
+    {
+        set
+        {
+            recoilModule = value;
+        }
+    }
+    public Vector3 RotationalRecoil
+    {
+        get
+        {
+            return rotationalRecoil;
+        }
+    }
+    public Vector3 RotationalAimRecoil
+    {
+        get
+        {
+            return aimRotationalRecoil;
+        }
+    }
+    public Vector3 PositionalRecoil
+    {
+        get
+        {
+            return positionalRecoil;
+        }
+    }
+    public Vector3 PositionalAimRecoil
+    {
+        get
+        {
+            return aimPositionalRecoil;
+        }
+    }
+    public float RecoilSnappiness
+    {
+        get
+        {
+            return recoilSnappiness;
+        }
+    }
+    public float RecoilReturnSpeed
+    {
+        get
+        {
+            return recoilReturnSpeed;
         }
     }
 
@@ -99,11 +157,22 @@ public class Firearm : MonoBehaviour
     {
         if (isEquipped && Time.time >= nextAnimationTime)
         {
-            if (firingSound != null)
+            if (firingSound != null && !(isHolding && hasHoldingFireSound))
             {
                 audioSource.PlayOneShot(firingSound);
+            } 
+            else if (isHolding && hasHoldingFireSound && !audioSource.isPlaying)
+            {
+                audioSource.loop = true;
+                audioSource.clip = holdingFireSound;
+                audioSource.Play();
             }
             animator.CrossFadeInFixedTime(shootStateName, 0f);
+            if (recoilModule != null)
+            {
+                recoilModule.ApplyRecoil();
+            }
+            ApplyFireLogic();
             nextAnimationTime = Time.time + 1f / fireRate;
         }
     }
@@ -120,11 +189,17 @@ public class Firearm : MonoBehaviour
     public void StopHoldingFire()
     {
         isHolding = false;
+        if (hasHoldingFireSound)
+        {
+            audioSource.loop = false;
+            audioSource.Stop();
+            audioSource.clip = null;
+        }
     }
 
     public void Reload()
     {
-        if (isEquipped && Time.time >= nextAnimationTime)
+        if (isEquipped && !isHolding && Time.time >= nextAnimationTime)
         {
             if (reloadSound != null)
             {
@@ -137,14 +212,14 @@ public class Firearm : MonoBehaviour
 
     public void Equip()
     {
-        if (isEquipped && Time.time >= nextAnimationTime)
+        if (isEquipped && !isHolding && Time.time >= nextAnimationTime)
         {
             animator.Play(unequipStateName);
             nextAnimationTime = Time.time + equipTime;
             isEquipped = false;
             isAiming = false;
         }
-        else if (Time.time >= nextAnimationTime)
+        else if (!isHolding && Time.time >= nextAnimationTime)
         {
             if (equipSound != null)
             {
@@ -159,7 +234,7 @@ public class Firearm : MonoBehaviour
 
     public void Aim()
     {
-        isAiming = !isAiming;
+        isAiming = !isAiming; 
     }
 
     private void Update()
@@ -172,6 +247,8 @@ public class Firearm : MonoBehaviour
         Fire();
         StartCoroutine(NextHoldFireCheck());
     }
+
+    protected abstract void ApplyFireLogic();
 
     private IEnumerator NextHoldFireCheck()
     {
