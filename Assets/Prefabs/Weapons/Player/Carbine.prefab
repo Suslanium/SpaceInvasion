@@ -460,6 +460,8 @@ MonoBehaviour:
   unequipStateName: unequip
   equipStateName: equip
   firingSound: {fileID: 8300000, guid: 27782b3dadf507a46946603a50860b00, type: 3}
+  hasHoldingFireSound: 0
+  holdingFireSound: {fileID: 0}
   reloadSound: {fileID: 0}
   equipSound: {fileID: 0}
   fireRate: 10

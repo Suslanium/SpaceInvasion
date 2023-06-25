@@ -6364,6 +6364,7 @@ MonoBehaviour:
   virtualCamera: {fileID: 1227518789}
   defaultFOV: 75
   aimFOV: 55
+  dashFOV: 0
   FOVChangeSpeed: 5
   defaultNoise: {fileID: 11400000, guid: 46965f9cbaf525742a6da4c2172a99cd, type: 2}
   aimNoise: {fileID: 0}

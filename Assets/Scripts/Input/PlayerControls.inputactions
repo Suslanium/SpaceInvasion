@@ -287,7 +287,7 @@
                 {
                     "name": "",
                     "id": "075b6c89-b139-4357-8d88-fcfa68340cb3",
-                    "path": "<Keyboard>/shift",
+                    "path": "<Keyboard>/alt",
                     "interactions": "",
                     "processors": "",
                     "groups": "KeyboardMouse",
