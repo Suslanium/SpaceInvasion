@@ -12,10 +12,10 @@ public class LevelGenerator : MonoBehaviour
     }
 
     public Vector2 size;
+    public GameObject[] roomPrefabs;
     public int startPosition = 0;
-    public GameObject room;
     public Vector2 offset;
-
+    
     private List<Cell> board;
 
     // Start is called before the first frame update
@@ -30,8 +30,9 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int j = 0; j < size.y; j++)
             {
+                var currentRoomPrefab = roomPrefabs[Random.Range(0, roomPrefabs.Length)];
                 var newRoom =
-                    Instantiate(room, new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity, transform)
+                    Instantiate(currentRoomPrefab, new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity, transform)
                         .GetComponent<RoomBehaviour>();
                 newRoom.UpdateRoom(board[Mathf.FloorToInt(i + j * size.x)].status);
 
