@@ -15,6 +15,7 @@ public class LevelGenerator : MonoBehaviour
     public GameObject[] roomPrefabs;
     public int startPosition = 0;
     public Vector2 offset;
+    public NavMeshGenerator generator;
     
     private List<Cell> board;
 
@@ -26,6 +27,7 @@ public class LevelGenerator : MonoBehaviour
 
     void GenerateLevel()
     {
+        List<RoomBehaviour> rooms = new List<RoomBehaviour>();
         for (int i = 0; i < size.x; i++)
         {
             for (int j = 0; j < size.y; j++)
@@ -34,10 +36,16 @@ public class LevelGenerator : MonoBehaviour
                 var newRoom =
                     Instantiate(currentRoomPrefab, new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity, transform)
                         .GetComponent<RoomBehaviour>();
+                rooms.Add(newRoom);
                 newRoom.UpdateRoom(board[Mathf.FloorToInt(i + j * size.x)].status);
 
                 newRoom.name += " " + i + "-" + j;
             }
+        }
+        generator.GenerateNavMesh();
+        for (int i = 0; i < rooms.Count; i++)
+        {
+            rooms[i].DisableRoom();
         }
     }
 
