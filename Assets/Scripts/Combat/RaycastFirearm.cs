@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class RaycastFirearm : Firearm
 {
-    [SerializeField] private float damage;
+    [SerializeField] private int damage;
     [SerializeField] private float range;
     [SerializeField] private float spread;
     [SerializeField] private Transform shootingPoint;
@@ -25,6 +25,11 @@ public class RaycastFirearm : Firearm
             {
                 GameObject impactEffect = Instantiate(impactObjectPrefab, hit.point, Quaternion.LookRotation(hit.normal));
                 Destroy(impactEffect, impactLifetime);
+            }
+            CharacterStats characterStats = hit.transform.gameObject.GetComponent<CharacterStats>();
+            if (characterStats != null)
+            {
+                characterStats.Damage(damage);
             }
         }
     }

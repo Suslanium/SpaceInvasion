@@ -115,11 +115,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   impactObjectPrefab: {fileID: 1734666646154458083, guid: 21609ce9aeb3b1a40bb9fc41138d73c9, type: 3}
+  damage: 5
   impactLifetime: 2
   bulletLifetime: 60
-  ignoreLayers:
-    serializedVersion: 2
-    m_Bits: 0
 --- !u!65 &7031557021110255209
 BoxCollider:
   m_ObjectHideFlags: 0
