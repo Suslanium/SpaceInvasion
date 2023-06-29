@@ -22,11 +22,6 @@ public class WeaponManager : MonoBehaviour
     private float currentTargetFOV;
     private int currentWeaponIndex = 0;
 
-    public void SetStats(PlayerHero playerHero)
-    {
-        
-    }
-    
     private void Start()
     {
         if (weaponParent == null)

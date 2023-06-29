@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public abstract class Hero
 {
     public abstract int HealthPoints { get; }
