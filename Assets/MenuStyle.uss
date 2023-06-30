@@ -1,0 +1,7 @@
+.menu-button-style {
+    width: 206px;
+    background-image: url('project://database/Assets/Assets/UI%20Assets/buttonBg1.jpg?fileID=2800000&guid=5bd3a699401244846a7e6c3f3404ec4f&type=3#buttonBg1');
+    color: rgb(255, 255, 255);
+    font-size: 22px;
+    -unity-font-definition: url('project://database/Assets/Fonts/Agdasima-Regular%20SDF.asset?fileID=11400000&guid=3d0bf2df114e41f4fa7d147794376849&type=2#Agdasima-Regular SDF');
+}
