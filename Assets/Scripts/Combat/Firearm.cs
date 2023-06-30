@@ -2,42 +2,21 @@ using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Animator), typeof(AudioSource))]
-public abstract class Firearm : MonoBehaviour
+public abstract class Firearm : Weapon
 {
-    private Animator animator;
-    private AudioSource audioSource;
-    private Recoil recoilModule;
-    [Header("Animator-related settings")]
-    [SerializeField] private string shootStateName;
-    [SerializeField] private string reloadStateName;
-    [SerializeField] private string unequipStateName;
-    [SerializeField] private string equipStateName;
-    [Header("Firearm sounds")]
-    [SerializeField] private AudioClip firingSound;
-    [SerializeField] private bool hasHoldingFireSound;
-    [SerializeField] private AudioClip holdingFireSound;
-    [SerializeField] private AudioClip reloadSound;
-    [SerializeField] private AudioClip equipSound;
-    [Header("Weapon specs")]
-    [SerializeField] private int fireRate;
-    [SerializeField] private float reloadTime;
-    [SerializeField] private float equipTime;
-    [SerializeField] private bool holdingIsAllowed;
-    [SerializeField] private float aimSpeed;
-    [SerializeField] private Vector3 rotationalRecoil;
-    [SerializeField] private Vector3 aimRotationalRecoil;
-    [SerializeField] private Vector3 positionalRecoil;
-    [SerializeField] private Vector3 aimPositionalRecoil;
-    [SerializeField] private float recoilSnappiness;
-    [SerializeField] private float recoilReturnSpeed;
-    [Header("Positions for procedural animations")]
-    [SerializeField] private Transform aimPosition;
-    [SerializeField] private Transform originalPosition;
-    [SerializeField] private Transform aimAnchor;
-    [Header("Moving speeds when weapon is equipped")]
-    [SerializeField] private int moveSpeed;
-    [SerializeField] private int sprintSpeed;
-    [SerializeField] private int aimMoveSpeed;
+    protected Animator animator;
+    protected AudioSource audioSource;
+    [SerializeField] protected string shootStateName;
+    [SerializeField] protected string reloadStateName;
+    [SerializeField] protected AudioClip firingSound;
+    [SerializeField] protected bool hasHoldingFireSound;
+    [SerializeField] protected AudioClip holdingFireSound;
+    [SerializeField] protected AudioClip reloadSound;
+    [SerializeField] protected int fireRate;
+    [SerializeField] protected float reloadTime;
+    [SerializeField] protected int moveSpeed;
+    [SerializeField] protected int sprintSpeed;
+    [SerializeField] protected int animationLayerIndex;
     public int MoveSpeed
     {
         get
@@ -52,88 +31,8 @@ public abstract class Firearm : MonoBehaviour
             return sprintSpeed;
         }
     }
-    public int AimSpeed
-    {
-        get
-        {
-            return aimMoveSpeed;
-        }
-    }
-    public bool HoldingIsAllowed
-    {
-        get
-        {
-            return holdingIsAllowed;
-        }
-    }
-    public Recoil Recoil
-    {
-        set
-        {
-            recoilModule = value;
-        }
-    }
-    public Vector3 RotationalRecoil
-    {
-        get
-        {
-            return rotationalRecoil;
-        }
-    }
-    public Vector3 RotationalAimRecoil
-    {
-        get
-        {
-            return aimRotationalRecoil;
-        }
-    }
-    public Vector3 PositionalRecoil
-    {
-        get
-        {
-            return positionalRecoil;
-        }
-    }
-    public Vector3 PositionalAimRecoil
-    {
-        get
-        {
-            return aimPositionalRecoil;
-        }
-    }
-    public float RecoilSnappiness
-    {
-        get
-        {
-            return recoilSnappiness;
-        }
-    }
-    public float RecoilReturnSpeed
-    {
-        get
-        {
-            return recoilReturnSpeed;
-        }
-    }
-
-    private bool isAiming = false;
-    public bool IsAiming
-    {
-        get
-        {
-            return isAiming;
-        }
-    }
-    private bool isEquipped = false;
-    public bool IsEquipped
-    {
-        get
-        {
-            return isEquipped;
-        }
-    }
-    private float nextAnimationTime = 0f;
-    private bool isHolding = false;
+    protected float nextAnimationTime = 0f;
+    protected bool isHolding = false;
 
     private void OnEnable()
     {
@@ -145,17 +44,17 @@ public abstract class Firearm : MonoBehaviour
         {
             audioSource = gameObject.GetComponent<AudioSource>();
         }
-        if (aimAnchor == null)
-        {
-            aimAnchor = gameObject.transform;
-        }
-        isEquipped = false;
-        Equip();
     }
 
-    public void Fire()
+    public override float Attack()
     {
-        if (isEquipped && Time.time >= nextAnimationTime)
+        Fire();
+        return 0f;
+    }
+
+    protected virtual void Fire()
+    {
+        if (Time.time >= nextAnimationTime)
         {
             if (firingSound != null && !(isHolding && hasHoldingFireSound))
             {
@@ -167,17 +66,18 @@ public abstract class Firearm : MonoBehaviour
                 audioSource.clip = holdingFireSound;
                 audioSource.Play();
             }
-            animator.CrossFadeInFixedTime(shootStateName, 0f);
-            if (recoilModule != null)
-            {
-                recoilModule.ApplyRecoil();
-            }
-            ApplyFireLogic();
+            animator.CrossFadeInFixedTime(shootStateName, 0f, animationLayerIndex);
+            ApplyAttackLogic();
             nextAnimationTime = Time.time + 1f / fireRate;
         }
     }
 
-    public void StartHoldingFire()
+    public override void StartHoldingAttack()
+    {
+        StartHoldingFire();
+    }
+
+    private void StartHoldingFire()
     {
         if (!isHolding && holdingIsAllowed)
         {
@@ -186,7 +86,12 @@ public abstract class Firearm : MonoBehaviour
         }
     }
 
-    public void StopHoldingFire()
+    public override void StopHoldingAttack()
+    {
+        StopHoldingFire();
+    }
+
+    private void StopHoldingFire()
     {
         isHolding = false;
         if (hasHoldingFireSound)
@@ -197,49 +102,17 @@ public abstract class Firearm : MonoBehaviour
         }
     }
 
-    public void Reload()
+    public virtual void Reload()
     {
-        if (isEquipped && !isHolding && Time.time >= nextAnimationTime)
+        if (!isHolding && Time.time >= nextAnimationTime)
         {
             if (reloadSound != null)
             {
                 audioSource.PlayOneShot(reloadSound);
             } 
-            animator.Play(reloadStateName);
+            animator.Play(reloadStateName, animationLayerIndex);
             nextAnimationTime = Time.time + reloadTime;
         }
-    }
-
-    public void Equip()
-    {
-        if (isEquipped && !isHolding && Time.time >= nextAnimationTime)
-        {
-            animator.Play(unequipStateName);
-            nextAnimationTime = Time.time + equipTime;
-            isEquipped = false;
-            isAiming = false;
-        }
-        else if (!isHolding && Time.time >= nextAnimationTime)
-        {
-            if (equipSound != null)
-            {
-                audioSource.PlayOneShot(equipSound);
-            }
-            animator.Play(equipStateName);
-            nextAnimationTime = Time.time + equipTime;
-            isEquipped = true;
-            isAiming = false;
-        }
-    }
-
-    public void Aim()
-    {
-        isAiming = !isAiming; 
-    }
-
-    private void Update()
-    {
-        UpdatePosition();
     }
 
     private void HoldFire()
@@ -248,8 +121,6 @@ public abstract class Firearm : MonoBehaviour
         StartCoroutine(NextHoldFireCheck());
     }
 
-    protected abstract void ApplyFireLogic();
-
     private IEnumerator NextHoldFireCheck()
     {
         yield return new WaitUntil(() => Time.time >= nextAnimationTime);
@@ -257,15 +128,5 @@ public abstract class Firearm : MonoBehaviour
         yield return null;
     }
 
-    private void UpdatePosition()
-    {
-        if (isAiming)
-        {
-            aimAnchor.transform.position = Vector3.Lerp(aimAnchor.transform.position, aimPosition.transform.position, Time.deltaTime * aimSpeed);
-        } 
-        else
-        {
-            aimAnchor.transform.position = Vector3.Lerp(aimAnchor.transform.position, originalPosition.transform.position, Time.deltaTime * aimSpeed);
-        }
-    }
+    protected abstract void ApplyAttackLogic();
 }

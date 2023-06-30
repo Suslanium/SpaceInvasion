@@ -12,6 +12,7 @@ public class MovementModule : MonoBehaviour
     [SerializeField] private string walkStateName;
     [SerializeField] private string idleStateName;
     private bool isWalking;
+    private bool isSuspended;
     private Transform currentTarget;
     private float stopDistance;
     private Vector3 prevTargetPosition = Vector3.zero;
@@ -32,33 +33,64 @@ public class MovementModule : MonoBehaviour
         currentTarget = null;
     }
 
+    public void SuspendMovementForSeconds(float seconds)
+    {
+        if (navMeshAgent.enabled)
+        {
+            navMeshAgent.isStopped = true;
+            navMeshAgent.updatePosition = false;
+            navMeshAgent.updateRotation = false;
+            navMeshAgent.velocity = Vector3.zero;
+            navMeshAgent.enabled = false;
+            isSuspended = true;
+            StartCoroutine(ResumeExecution(seconds));
+        }
+    }
+
     void Update()
     {
-        if (currentTarget != null && Vector3.Distance(transform.position, currentTarget.position) > stopDistance)
+        if (!isSuspended)
         {
-            if (!isWalking)
+            if (currentTarget != null && Vector3.Distance(transform.position, currentTarget.position) > stopDistance)
             {
-                isWalking = true;
-                animator.CrossFade(walkStateName, animationLayerIndex);
+                if (!isWalking)
+                {
+                    isWalking = true;
+                    animator.CrossFade(walkStateName, animationLayerIndex);
+                }
+                if (currentTarget.position != prevTargetPosition)
+                {
+                    navMeshAgent.SetDestination(currentTarget.position);
+                    prevTargetPosition = currentTarget.position;
+                }
             }
-            if (currentTarget.position != prevTargetPosition)
+            else
             {
-                navMeshAgent.SetDestination(currentTarget.position);
-                prevTargetPosition = currentTarget.position;
-            }
-        } 
-        else
-        {
-            if (isWalking)
-            {
-                isWalking = false;
-                animator.CrossFade(idleStateName, animationLayerIndex);
-            }
-            if (transform.position != prevTargetPosition)
-            {
-                navMeshAgent.SetDestination(transform.position);
-                prevTargetPosition = transform.position;
+                if (isWalking)
+                {
+                    isWalking = false;
+                    animator.CrossFade(idleStateName, animationLayerIndex);
+                }
+                if (transform.position != prevTargetPosition)
+                {
+                    navMeshAgent.SetDestination(transform.position);
+                    prevTargetPosition = transform.position;
+                }
             }
         }
+    }
+
+    private IEnumerator ResumeExecution(float resumeAfterSeconds)
+    {
+        yield return new WaitForSeconds(resumeAfterSeconds);
+        if (!navMeshAgent.enabled)
+        {
+            navMeshAgent.enabled = true;
+            navMeshAgent.updatePosition = true;
+            navMeshAgent.updateRotation = true;
+            navMeshAgent.isStopped = false;
+            isSuspended = false;
+        }
+        yield return null;
     }
 }
