@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657874, g: 0.49641258, b: 0.5748172, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657826, g: 0.49641263, b: 0.57481676, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -340,6 +340,7 @@ MonoBehaviour:
   characterGameobject: {fileID: 1415100417}
   deathParticleEffectPrefab: {fileID: 0}
   deathEffectLifetime: 0
+  health: 0
 --- !u!1 &921890330
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,6 +390,7 @@ MonoBehaviour:
   - {fileID: 4427648761867651471, guid: 9fd75516125f59d41adc4750963c9f1b, type: 3}
   - {fileID: 4203290828701599550, guid: 9bf7999987629d649855a2fbe36cb1a0, type: 3}
   - {fileID: 2022133984136692503, guid: f66f84d10aa760844a880c3cd0aec564, type: 3}
+  - {fileID: 3201461141036779283, guid: 4cd91857cffa44842aac48a8e2823242, type: 3}
   virtualCamera: {fileID: 601910686}
   defaultFOV: 75
   aimFOV: 55

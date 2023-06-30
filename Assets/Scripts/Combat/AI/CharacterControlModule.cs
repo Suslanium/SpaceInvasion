@@ -25,7 +25,7 @@ public class CharacterControlModule : MonoBehaviour
                 if (Vector3.Distance(transform.position, currentEnemy.transform.position) < attackDistance)
                 {
                     RaycastHit hit;
-                    if (Physics.SphereCast(attackPoint.transform.position, 1f, attackPoint.transform.forward, out hit))
+                    if (Physics.SphereCast(attackPoint.transform.position, raycastThickness, attackPoint.transform.forward, out hit))
                     {
                         if (hit.transform.gameObject == currentEnemy)
                         {
