@@ -149,6 +149,5 @@ public class UIController : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
         Time.timeScale = 1.0f;
-        Time.fixedDeltaTime = Time.deltaTime * Time.timeScale;
     }
 }
