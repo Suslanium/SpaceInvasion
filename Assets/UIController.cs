@@ -30,14 +30,14 @@ public class HeroComparer : IEqualityComparer<Hero>
 
 public class UIController : MonoBehaviour
 {
-    public Label TankHeroStats;
-    public Label FighterHeroStats;
-    public Label MarksmanHeroStats;
-    public Label ChosenHeroesLabel;
-    public Button CrossFighterHeroButton;
-    public Button CrossTankHeroButton;
-    public Button CrossMarksmanHeroButton;
-    public Button PlayButton;
+    private Label _tankHeroStats;
+    private Label _fighterHeroStats;
+    private Label _marksmanHeroStats;
+    private Label _chosenHeroesLabel;
+    private Button _crossFighterHeroButton;
+    private Button _crossTankHeroButton;
+    private Button _crossMarksmanHeroButton;
+    private Button _playButton;
 
     private TankHero _tankHero = new();
     private FighterHero _fighterHero = new();
@@ -54,31 +54,31 @@ public class UIController : MonoBehaviour
     {
         var root = GetComponent<UIDocument>().rootVisualElement;
 
-        TankHeroStats = root.Q<Label>("TankHeroStats");
-        FighterHeroStats = root.Q<Label>("FighterHeroStats");
-        MarksmanHeroStats = root.Q<Label>("MarksmanHeroStats");
-        ChosenHeroesLabel = root.Q<Label>("ChosenHeroesLabel");
+        _tankHeroStats = root.Q<Label>("TankHeroStats");
+        _fighterHeroStats = root.Q<Label>("FighterHeroStats");
+        _marksmanHeroStats = root.Q<Label>("MarksmanHeroStats");
+        _chosenHeroesLabel = root.Q<Label>("ChosenHeroesLabel");
         
-        CrossFighterHeroButton = root.Q<Button>("CrossFighterHeroButton");
-        CrossTankHeroButton = root.Q<Button>("CrossTankHeroButton");
-        CrossMarksmanHeroButton = root.Q<Button>("CrossMarksmanHeroButton");
+        _crossFighterHeroButton = root.Q<Button>("CrossFighterHeroButton");
+        _crossTankHeroButton = root.Q<Button>("CrossTankHeroButton");
+        _crossMarksmanHeroButton = root.Q<Button>("CrossMarksmanHeroButton");
 
-        CrossFighterHeroButton.clicked += OnFighterClick;
-        CrossTankHeroButton.clicked += OnTankClick;
-        CrossMarksmanHeroButton.clicked += OnMarksmanClick;
+        _crossFighterHeroButton.clicked += OnFighterClick;
+        _crossTankHeroButton.clicked += OnTankClick;
+        _crossMarksmanHeroButton.clicked += OnMarksmanClick;
 
-        PlayButton = root.Q<Button>("PlayButton");
+        _playButton = root.Q<Button>("PlayButton");
         
-        PlayButton.clicked += OnPlayButtonClick;
+        _playButton.clicked += OnPlayButtonClick;
     }
     
     void Update()
     {
-        TankHeroStats.text = _tankHero.ToString();
-        FighterHeroStats.text = _fighterHero.ToString();
-        MarksmanHeroStats.text = _marksmanHero.ToString();
+        _tankHeroStats.text = _tankHero.ToString();
+        _fighterHeroStats.text = _fighterHero.ToString();
+        _marksmanHeroStats.text = _marksmanHero.ToString();
         
-        PlayButton.SetEnabled(_chosenHeroes.Count == 2);
+        _playButton.SetEnabled(_chosenHeroes.Count == 2);
 
         _firstChosenHero = _chosenHeroes.Count > 0 ? GetChosenHeroAtIndex(0) : null;
         _secondChosenHero = _chosenHeroes.Count > 1 ? GetChosenHeroAtIndex(1) : null;
@@ -86,7 +86,7 @@ public class UIController : MonoBehaviour
         _firstChosenHeroLabel = _firstChosenHero == null ? "None" : _firstChosenHero.Name;
         _secondChosenHeroLabel = _secondChosenHero == null ? "None" : _secondChosenHero.Name;
         
-        ChosenHeroesLabel.text = $"Heroes chosen: {_firstChosenHeroLabel} + {_secondChosenHeroLabel}";
+        _chosenHeroesLabel.text = $"Heroes chosen: {_firstChosenHeroLabel} + {_secondChosenHeroLabel}";
     }
 
     private Hero GetChosenHeroAtIndex(int index)

@@ -1,0 +1,10 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xsi="http://www.w3.org/2001/XMLSchema-instance" engine="UnityEngine.UIElements" editor="UnityEditor.UIElements" noNamespaceSchemaLocation="../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/MenuStyle.uss?fileID=7433441132597879392&amp;guid=0b0de59b86c260044a4b4deb554e0bc6&amp;type=3#MenuStyle" />
+    <ui:VisualElement name="SettingsContainer" style="width: 214px; height: 237px; flex-grow: 1; background-color: rgba(255, 255, 255, 0);">
+        <ui:Button text="S O U N D" display-tooltip-when-elided="true" name="SoundButton" class="menu-button-style" />
+        <ui:SliderInt picking-mode="Ignore" value="50" high-value="100" name="SoundSlider" inverted="false" style="background-color: rgba(255, 255, 255, 0);" />
+        <ui:Button text="M U S I C" display-tooltip-when-elided="true" name="MusicButton" class="menu-button-style" style="margin-top: 10px;" />
+        <ui:SliderInt picking-mode="Ignore" value="50" high-value="100" name="MusicSlider" style="background-color: rgba(255, 255, 255, 0);" />
+        <ui:Button text="B A C K" display-tooltip-when-elided="true" name="BackButton" class="menu-button-style" style="margin-top: 10px;" />
+    </ui:VisualElement>
+</ui:UXML>
