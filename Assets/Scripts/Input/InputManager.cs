@@ -11,6 +11,7 @@ public class InputManager : MonoBehaviour
 #if ENABLE_INPUT_SYSTEM
 	[SerializeField] private PlayerInput playerInput;
 	[SerializeField] private string fireActionName;
+	[SerializeField] private Interactor interactor;
 
 	private InputAction fireAction;
 	private bool firePressedState = false;
@@ -95,6 +96,14 @@ public class InputManager : MonoBehaviour
         }
     }
 
+	public void OnInteract()
+	{
+		if (interactor != null)
+		{
+			interactor.Interact();
+		}
+	}
+
     private void Start()
     {
 		if (playerInput != null)
@@ -108,7 +117,7 @@ public class InputManager : MonoBehaviour
         if (fireAction != null && weaponManager != null && fireAction.IsPressed() != firePressedState)
         {
 			firePressedState = fireAction.IsPressed();
-			weaponManager.SetHoldingFireState(firePressedState);
+			weaponManager.SetHoldingAttackState(firePressedState);
         }
     }
 #endif

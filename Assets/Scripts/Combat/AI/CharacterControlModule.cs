@@ -5,12 +5,15 @@ using UnityEngine;
 public class CharacterControlModule : MonoBehaviour
 {
     [SerializeField] private SmoothLookAt lookModule;
-    [Header("Optional, character may not move")]
     [SerializeField] private MovementModule movementModule;
+    [SerializeField] private bool suspendMovementOnAttack;
     [SerializeField] private float visionDistance;
     [SerializeField] private float attackDistance;
     [SerializeField] private float stopToAttackDistance;
     [SerializeField] private string enemyTag;
+    [SerializeField] private Weapon weapon;
+    [SerializeField] private float raycastThickness = 1f;
+    [SerializeField] private bool useRegularRaycast = true;
     private GameObject currentEnemy;
     [SerializeField] private Transform attackPoint;
 
@@ -22,14 +25,27 @@ public class CharacterControlModule : MonoBehaviour
             {
                 if (Vector3.Distance(transform.position, currentEnemy.transform.position) < attackDistance)
                 {
-                    Ray ray = new Ray(attackPoint.transform.position, currentEnemy.transform.position - attackPoint.transform.position);
                     RaycastHit hit;
-                    if (Physics.Raycast(ray, out hit))
+                    if ((!useRegularRaycast && Physics.SphereCast(attackPoint.transform.position, raycastThickness, attackPoint.transform.forward, out hit)) || (useRegularRaycast && Physics.Raycast(attackPoint.transform.position, attackPoint.transform.forward, out hit)))
                     {
                         if (hit.transform.gameObject == currentEnemy)
                         {
-                            //Unfinished
-                            Debug.Log("Attack!");
+                            if (weapon.HoldingIsAllowed)
+                            {
+                                weapon.StartHoldingAttack();
+                            }
+                            else
+                            {
+                                float timeout = weapon.Attack();
+                                if (timeout != 0f && suspendMovementOnAttack && movementModule != null)
+                                {
+                                    movementModule.SuspendMovementForSeconds(timeout);
+                                }
+                            }
+                        } 
+                        else
+                        {
+                            weapon.StopHoldingAttack();
                         }
                     }
                 }
@@ -41,7 +57,11 @@ public class CharacterControlModule : MonoBehaviour
                 {
                     movementModule.RemoveTarget();
                 }
-                lookModule.RemoveTarget();
+                if (lookModule != null)
+                {
+                    lookModule.RemoveTarget();
+                }
+                weapon.StopHoldingAttack();
             }
         }
         else
@@ -56,7 +76,10 @@ public class CharacterControlModule : MonoBehaviour
                     {
                         movementModule.SetTarget(currentEnemy.transform, stopToAttackDistance);
                     }
-                    lookModule.SetTarget(currentEnemy.transform);
+                    if (lookModule != null)
+                    {
+                        lookModule.SetTarget(currentEnemy.transform);
+                    }
                     break;
                 }
             }
