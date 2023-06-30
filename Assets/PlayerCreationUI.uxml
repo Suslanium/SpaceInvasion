@@ -1,0 +1,35 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/Style.uss?fileID=7433441132597879392&amp;guid=55e072be85ba42c45a807c485969c815&amp;type=3#Style" />
+    <ui:VisualElement name="Background" style="justify-content: center; flex-basis: 20%; flex-grow: 1; align-items: center; background-image: url(&apos;project://database/Assets/Assets/UI%20Assets/sciFiBg.jpg?fileID=2800000&amp;guid=77dac21113bc1a54488a6db63b33eed8&amp;type=3#sciFiBg&apos;);">
+        <ui:VisualElement name="HeroChoiceContainer" style="border-top-left-radius: 15px; border-bottom-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; background-color: rgba(156, 176, 219, 0.94); align-items: center;">
+            <ui:Label text="Choose 2 heroes to cross and get a new unique hero!" display-tooltip-when-elided="true" name="HeroChoiceTitle" style="align-items: stretch; color: rgb(0, 0, 0); padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px; margin-top: 0; font-size: 20px; -unity-font-definition: url(&apos;project://database/Assets/Fonts/Ubuntu-Regular%20SDF.asset?fileID=11400000&amp;guid=ef3ca03b4d7ed0a4ead0653e141f36c5&amp;type=2#Ubuntu-Regular SDF&apos;);" />
+            <ui:VisualElement name="HeroCardsContainer">
+                <ui:VisualElement name="HeroChoice" style="background-color: rgba(71, 195, 241, 0); justify-content: flex-start; align-items: center; flex-direction: row; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px;">
+                    <ui:VisualElement name="FighterHeroCard" class="hero-card-container">
+                        <ui:VisualElement name="FighterHeroInfo" class="hero-info-container" style="background-color: rgb(174, 168, 236); margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px; width: 350px; align-items: center;">
+                            <ui:Label text="FIGHTER" display-tooltip-when-elided="true" enable-rich-text="true" name="FighterHeroName" style="font-size: 36px; color: rgb(0, 0, 0); padding-left: 0; padding-right: 0;" />
+                            <ui:Label display-tooltip-when-elided="true" name="FighterHeroStats" class="hero-stats-style" />
+                        </ui:VisualElement>
+                        <ui:Button text="cross" display-tooltip-when-elided="true" name="CrossFighterHeroButton" class="button-style" style="-unity-font: url(&apos;project://database/Assets/Fonts/Ubuntu-Bold.ttf?fileID=12800000&amp;guid=826d8bba62d9ca048a3737482c5887d1&amp;type=3#Ubuntu-Bold&apos;); -unity-font-definition: url(&apos;project://database/Assets/Fonts/Ubuntu-Regular%20SDF.asset?fileID=11400000&amp;guid=ef3ca03b4d7ed0a4ead0653e141f36c5&amp;type=2#Ubuntu-Regular SDF&apos;); color: rgb(255, 255, 255);" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="TankHeroCard" class="hero-card-container">
+                        <ui:VisualElement name="TankHeroInfo" class="hero-info-container" style="width: 350px;">
+                            <ui:Label text="TANK" display-tooltip-when-elided="true" enable-rich-text="true" name="TankHeroName" style="font-size: 36px; color: rgb(0, 0, 0); padding-left: 0; padding-right: 0;" />
+                            <ui:Label display-tooltip-when-elided="true" name="TankHeroStats" class="hero-stats-style" />
+                        </ui:VisualElement>
+                        <ui:Button text="cross" display-tooltip-when-elided="true" name="CrossTankHeroButton" class="button-style" style="color: rgb(255, 255, 255);" />
+                    </ui:VisualElement>
+                    <ui:VisualElement name="MarksmanHeroCard" class="hero-card-container">
+                        <ui:VisualElement name="MarksmanHeroInfo" class="hero-info-container" style="background-color: rgb(174, 168, 236); margin-left: 10px; margin-right: 10px; margin-top: 10px; margin-bottom: 10px; padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px; width: 350px; align-items: center;">
+                            <ui:Label text="MARKSMAN" display-tooltip-when-elided="true" enable-rich-text="true" name="MarksmanHeroName" style="font-size: 36px; color: rgb(0, 0, 0); padding-left: 0; padding-right: 0;" />
+                            <ui:Label display-tooltip-when-elided="true" name="MarksmanHeroStats" class="hero-stats-style" />
+                        </ui:VisualElement>
+                        <ui:Button text="cross" display-tooltip-when-elided="true" name="CrossMarksmanHeroButton" class="button-style" style="color: rgb(255, 255, 255);" />
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:Label text="Heroes chosen: None + None" display-tooltip-when-elided="true" name="ChosenHeroesLabel" style="padding-left: 10px; padding-right: 10px; padding-top: 10px; padding-bottom: 10px; font-size: 20px; margin-top: 12px; margin-bottom: 10px; -unity-font-definition: url(&apos;project://database/Assets/Fonts/Ubuntu-MediumItalic%20SDF.asset?fileID=11400000&amp;guid=90adf024faf25a2429e5723ceda95a06&amp;type=2#Ubuntu-MediumItalic SDF&apos;);" />
+        </ui:VisualElement>
+        <ui:Button text="PLAY!" display-tooltip-when-elided="true" name="PlayButton" class="button-style" style="background-color: rgb(174, 168, 236); position: absolute; bottom: 50px; right: 50px; color: rgb(0, 0, 0); width: 200px; border-top-left-radius: 15px; border-bottom-left-radius: 15px; border-top-right-radius: 15px; border-bottom-right-radius: 15px; font-size: 21px;" />
+    </ui:VisualElement>
+</ui:UXML>

@@ -1,5 +1,6 @@
 public class MarksmanHero : Hero
 {
+    public override string Name => "Marksman";
     public override int HealthPoints => 100;
     public override int ArmorPoints => 100;
     public override float DamageMultiplier => 1f;
