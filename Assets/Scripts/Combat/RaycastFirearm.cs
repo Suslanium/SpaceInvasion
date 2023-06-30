@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class RaycastFirearm : Firearm
+public class RaycastFirearm : PlayerFireArm
 {
     [SerializeField] private int damage;
     [SerializeField] private float range;
@@ -10,7 +10,7 @@ public class RaycastFirearm : Firearm
     [SerializeField] private GameObject impactObjectPrefab;
     [SerializeField] private float impactLifetime = 2f;
     [SerializeField] private LayerMask ignoreLayers;
-    protected override void ApplyFireLogic()
+    protected override void ApplyAttackLogic()
     {
         if (shootingEffect != null)
         {

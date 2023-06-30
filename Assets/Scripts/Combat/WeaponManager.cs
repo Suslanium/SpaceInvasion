@@ -18,7 +18,8 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private Recoil recoilModule;
     [SerializeField] private StarterAssets.FirstPersonController playerController;
     private GameObject currentWeaponGameobject;
-    private Firearm currentWeaponScript;
+    private PlayerFireArm currentWeaponScript;
+    private PlayerMeleeWeapon currentMeleeWeapon;
     private float currentTargetFOV;
     private int currentWeaponIndex = 0;
 
@@ -47,10 +48,17 @@ public class WeaponManager : MonoBehaviour
             newWeapon.transform.localPosition = Vector3.zero;
             newWeapon.transform.localEulerAngles = Vector3.zero;
 
-            currentWeaponScript = newWeapon.GetComponentInChildren<Firearm>();
-            if (recoilModule != null)
+            currentWeaponScript = newWeapon.GetComponentInChildren<PlayerFireArm>();
+            if (currentWeaponScript != null)
             {
-                currentWeaponScript.Recoil = recoilModule;
+                if (recoilModule != null)
+                {
+                    currentWeaponScript.Recoil = recoilModule;
+                }
+            } 
+            else
+            {
+                currentMeleeWeapon = newWeapon.GetComponentInChildren<PlayerMeleeWeapon>();
             }
             currentWeaponGameobject = newWeapon;
             ResetAim();
@@ -89,12 +97,12 @@ public class WeaponManager : MonoBehaviour
     {
         currentTargetFOV = defaultFOV;
         swayModule.SetAimingState(false);
-        if (recoilModule != null)
+        if (recoilModule != null && currentWeaponScript != null)
         {
             recoilModule.SetRecoilSpecs(currentWeaponScript.RotationalRecoil, currentWeaponScript.PositionalRecoil, currentWeaponScript.RecoilSnappiness, currentWeaponScript.RecoilReturnSpeed);
         }
-        playerController.MoveSpeed = currentWeaponScript.MoveSpeed;
-        playerController.SprintSpeed = currentWeaponScript.SprintSpeed;
+        playerController.MoveSpeed = currentWeaponScript != null ? currentWeaponScript.MoveSpeed : currentMeleeWeapon.MoveSpeed;
+        playerController.SprintSpeed = currentWeaponScript != null ? currentWeaponScript.SprintSpeed : currentMeleeWeapon.SprintSpeed;
         if (virtualCamera != null)
         {
             virtualCamera.GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>().m_NoiseProfile = defaultNoise;
@@ -105,23 +113,38 @@ public class WeaponManager : MonoBehaviour
     {
         if (currentWeaponScript != null)
         {
-            currentWeaponScript.Fire();
+            currentWeaponScript.Attack();
+        }
+        else if (currentMeleeWeapon != null)
+        {
+            currentMeleeWeapon.Attack();
         }
     }
 
-    public void SetHoldingFireState(bool value)
+    public void SetHoldingAttackState(bool value)
     {
         if (currentWeaponScript != null)
         {
             if (value)
             {
-                currentWeaponScript.StartHoldingFire();
+                currentWeaponScript.StartHoldingAttack();
             }
             else
             {
-                currentWeaponScript.StopHoldingFire();
+                currentWeaponScript.StopHoldingAttack();
             }
         }
+        else if (currentMeleeWeapon != null)
+        {
+            if (value)
+            {
+                currentMeleeWeapon.StartHoldingAttack();
+            }
+            else
+            {
+                currentMeleeWeapon.StopHoldingAttack();
+            }
+        } 
     }
 
     public void Reload()
@@ -136,8 +159,14 @@ public class WeaponManager : MonoBehaviour
     {
         if (currentWeaponScript != null)
         {
-            currentWeaponScript.Equip();
-            ResetAim();
+            if (currentWeaponScript.Equip())
+            {
+                ResetAim();
+            }
+        }
+        else if (currentMeleeWeapon != null)
+        {
+            currentMeleeWeapon.Equip();
         }
     }
 

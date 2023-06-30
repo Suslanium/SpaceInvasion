@@ -8,7 +8,7 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private GameObject characterGameobject;
     [SerializeField] private GameObject deathParticleEffectPrefab;
     [SerializeField] private float deathEffectLifetime;
-    private int health;
+    [SerializeField] private int health;
 
     void Start()
     {

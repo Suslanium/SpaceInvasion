@@ -108,7 +108,7 @@ public class InputManager : MonoBehaviour
         if (fireAction != null && weaponManager != null && fireAction.IsPressed() != firePressedState)
         {
 			firePressedState = fireAction.IsPressed();
-			weaponManager.SetHoldingFireState(firePressedState);
+			weaponManager.SetHoldingAttackState(firePressedState);
         }
     }
 #endif

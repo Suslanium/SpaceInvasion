@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PhysicalFirearm : Firearm
+public class PhysicalFirearm : PlayerFireArm
 {
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private float shootForce = 300f;
@@ -13,7 +13,7 @@ public class PhysicalFirearm : Firearm
     [SerializeField] private ParticleSystem[] muzzleFlash;
     [SerializeField] private LayerMask ignoreLayers;
 
-    protected override void ApplyFireLogic()
+    protected override void ApplyAttackLogic()
     {
         foreach(ParticleSystem flash in muzzleFlash)
         {
