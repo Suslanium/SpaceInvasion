@@ -12,6 +12,8 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private GameObject deathParticleEffectPrefab;
     [SerializeField] private float deathEffectLifetime;
 
+    public HealthBar healthBar;
+
     void Start()
     {
         health = maxHealth;
@@ -21,6 +23,7 @@ public class CharacterStats : MonoBehaviour
     {
         maxHealth = health;
         this.health = health;
+        healthBar.SetMaxHealth(maxHealth);
         maxArmor = armor;
         this.armor = armor;
     }
@@ -35,6 +38,11 @@ public class CharacterStats : MonoBehaviour
     public void Damage(int amount)
     {
         health -= amount;
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(health);
+        }
+        
         if (health <= 0)
         {
             Die();
@@ -44,6 +52,7 @@ public class CharacterStats : MonoBehaviour
     public void Heal(int amount)
     {
         health += amount;
+        healthBar.SetHealth(health);
         if (health > maxHealth)
         {
             health = maxHealth;
