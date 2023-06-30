@@ -8,6 +8,7 @@ public class TriggerDoor : MonoBehaviour
     [SerializeField] private GameObject[] openDoors;
     [SerializeField] private GameObject[] closedDoors;
     [SerializeField] private GameObject triggerDoor;
+    private List<CharacterControlModule> enemyControllers = new List<CharacterControlModule>();
     private LevelInfo levelInfo;
 
     private void Start()
@@ -16,15 +17,27 @@ public class TriggerDoor : MonoBehaviour
         levelInfo = levelObject.GetComponent<LevelInfo>();
     }
 
+    public void AddEnemy(CharacterControlModule controlModule)
+    {
+        enemyControllers.Add(controlModule);
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        for (int i = 0; i < openDoors.Length; i++)
+        if (other.tag == playerTag)
         {
-            closedDoors[i].SetActive(true);
-            openDoors[i].SetActive(false);
-        }
+            for (int i = 0; i < openDoors.Length; i++)
+            {
+                closedDoors[i].SetActive(true);
+                openDoors[i].SetActive(false);
+            }
 
-        levelInfo.roomCounter--;
-        triggerDoor.SetActive(false);
+            levelInfo.roomCounter--;
+            foreach (CharacterControlModule controller in enemyControllers)
+            {
+                controller.EnableAI();
+            }
+            triggerDoor.SetActive(false);
+        }
     }
 }

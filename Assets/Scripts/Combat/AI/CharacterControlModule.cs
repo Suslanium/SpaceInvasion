@@ -14,8 +14,14 @@ public class CharacterControlModule : MonoBehaviour
     [SerializeField] private Weapon weapon;
     [SerializeField] private float raycastThickness = 1f;
     [SerializeField] private bool useRegularRaycast = true;
-    private GameObject currentEnemy;
+    [SerializeField] private bool aiEnabled = false;
     [SerializeField] private Transform attackPoint;
+    private GameObject currentEnemy;
+
+    public void EnableAI()
+    {
+        aiEnabled = true;
+    }
 
     void Update()
     {
@@ -64,7 +70,7 @@ public class CharacterControlModule : MonoBehaviour
                 weapon.StopHoldingAttack();
             }
         }
-        else
+        else if (aiEnabled)
         {
             var visibleObjects = Physics.OverlapSphere(transform.position, visionDistance);
             foreach(var gameObj in visibleObjects)
