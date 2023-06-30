@@ -1,5 +1,6 @@
 public class PlayerHero : Hero
 {
+    public override string Name => "Your hero";
     public override int HealthPoints { get; }
     public override int ArmorPoints { get; }
     public override float DamageMultiplier { get; }

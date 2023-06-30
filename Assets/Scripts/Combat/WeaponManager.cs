@@ -22,9 +22,11 @@ public class WeaponManager : MonoBehaviour
     private PlayerMeleeWeapon currentMeleeWeapon;
     private float currentTargetFOV;
     private int currentWeaponIndex = 0;
+    private PlayerHero _playerHero;
 
     private void Start()
     {
+        _playerHero = PlayerRepository.PlayerHero;
         if (weaponParent == null)
         {
             weaponParent = transform;

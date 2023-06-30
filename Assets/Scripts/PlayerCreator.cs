@@ -7,7 +7,7 @@ using Random = System.Random;
 
 public class PlayerCreator : MonoBehaviour, IInteractable
 {
-    [SerializeField] public GameObject panel;
+    [SerializeField] public GameObject UIDocument;
 
     private PlayerInput playerInput;
 
@@ -29,13 +29,13 @@ public class PlayerCreator : MonoBehaviour, IInteractable
 
     public void Interact()
     {
-        if (panel != null)
+        if (UIDocument != null)
         {
             Time.timeScale = 0.0f;
             Time.fixedDeltaTime = Time.deltaTime * Time.timeScale;
 
             playerInput.enabled = false;
-            panel.SetActive(true);
+            UIDocument.SetActive(true);
 
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
