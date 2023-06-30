@@ -11,15 +11,13 @@ public class LevelGenerator : MonoBehaviour
         public bool[] status = new bool[4];
     }
 
-    public Vector2 size;
-    public GameObject[] roomPrefabs;
-    public int startPosition = 0;
-    public Vector2 offset;
-    public NavMeshGenerator generator;
-    
+    [SerializeField] private Vector2 size;
+    [SerializeField] private GameObject[] roomPrefabs;
+    [SerializeField] private int startPosition = 0;
+    [SerializeField] private Vector2 offset;
+    [SerializeField] private NavMeshGenerator generator;
     private List<Cell> board;
 
-    // Start is called before the first frame update
     void Start()
     {
         GenerateMaze();
@@ -32,7 +30,17 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int j = 0; j < size.y; j++)
             {
-                var currentRoomPrefab = roomPrefabs[Random.Range(0, roomPrefabs.Length)];
+                var currentRoomPrefab = roomPrefabs[roomPrefabs.Length - 1];
+
+                if ((i == 0 && j == 0) || (i == 4 && j == 0) || (i == 0 && j == 4) || (i == 4 && j == 4))
+                {
+                    currentRoomPrefab = roomPrefabs[roomPrefabs.Length - 1];
+                }
+                else
+                {
+                    currentRoomPrefab = roomPrefabs[Random.Range(0, roomPrefabs.Length - 1)];
+                }
+
                 var newRoom =
                     Instantiate(currentRoomPrefab, new Vector3(i * offset.x, 0, -j * offset.y), Quaternion.identity, transform)
                         .GetComponent<RoomBehaviour>();
