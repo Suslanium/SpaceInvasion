@@ -99,7 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   impactObjectPrefab: {fileID: 1734666646154458083, guid: 21609ce9aeb3b1a40bb9fc41138d73c9, type: 3}
-  damage: 40
+  damage: 100
   impactLifetime: 2
   impactSounds:
   - {fileID: 8300000, guid: 1fff3ed74a7354442bb1312ea3701b0f, type: 3}
@@ -118,8 +118,8 @@ BoxCollider:
   m_IsTrigger: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 0.06953723, y: 1.354866, z: 0.07724945}
-  m_Center: {x: 0.00000019822897, y: 0.7656087, z: -0.0000014955024}
+  m_Size: {x: 0.2140386, y: 1.8364354, z: 0.23237945}
+  m_Center: {x: 0.014520426, y: 1.0063978, z: -0.0001605197}
 --- !u!54 &1926328723837599626
 Rigidbody:
   m_ObjectHideFlags: 0

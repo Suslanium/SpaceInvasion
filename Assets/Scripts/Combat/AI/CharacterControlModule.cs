@@ -13,6 +13,7 @@ public class CharacterControlModule : MonoBehaviour
     [SerializeField] private string enemyTag;
     [SerializeField] private Weapon weapon;
     [SerializeField] private float raycastThickness = 1f;
+    [SerializeField] private bool useRegularRaycast = true;
     private GameObject currentEnemy;
     [SerializeField] private Transform attackPoint;
 
@@ -25,7 +26,7 @@ public class CharacterControlModule : MonoBehaviour
                 if (Vector3.Distance(transform.position, currentEnemy.transform.position) < attackDistance)
                 {
                     RaycastHit hit;
-                    if (Physics.SphereCast(attackPoint.transform.position, raycastThickness, attackPoint.transform.forward, out hit))
+                    if ((!useRegularRaycast && Physics.SphereCast(attackPoint.transform.position, raycastThickness, attackPoint.transform.forward, out hit)) || (useRegularRaycast && Physics.Raycast(attackPoint.transform.position, attackPoint.transform.forward, out hit)))
                     {
                         if (hit.transform.gameObject == currentEnemy)
                         {
