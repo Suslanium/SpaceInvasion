@@ -14,6 +14,8 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private float deathEffectLifetime;
     private RoomBehaviour _ownerRoom;
 
+    public HealthBar healthBar;
+
     void Start()
     {
         health = maxHealth;
@@ -27,6 +29,7 @@ public class CharacterStats : MonoBehaviour
     {
         maxHealth = health;
         this.health = health;
+        healthBar.SetMaxHealth(maxHealth);
         maxArmor = armor;
         this.armor = armor;
     }
@@ -60,6 +63,11 @@ public class CharacterStats : MonoBehaviour
             armor = 0;
         }
         health -= amount;
+        if (healthBar != null)
+        {
+            healthBar.SetHealth(health);
+        }
+        
         if (health <= 0)
         {
             Die();
@@ -69,6 +77,7 @@ public class CharacterStats : MonoBehaviour
     public void Heal(int amount)
     {
         health += amount;
+        healthBar.SetHealth(health);
         if (health > maxHealth)
         {
             health = maxHealth;
