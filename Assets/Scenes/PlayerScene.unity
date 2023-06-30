@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074014, b: 0.3587274, a: 1}
+  m_IndirectSpecularColor: {r: 0.3731193, g: 0.38073996, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -10498,10 +10498,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  health: 0
+  maxArmor: 0
+  armor: 0
   characterGameobject: {fileID: 523321973654211687}
   deathParticleEffectPrefab: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
   deathEffectLifetime: 2
-  health: 0
 --- !u!4 &8131153125222154698
 Transform:
   m_ObjectHideFlags: 0
@@ -15432,6 +15434,7 @@ MonoBehaviour:
   swayModule: {fileID: 8131153125516999399}
   recoilModule: {fileID: 8131153125242707060}
   playerController: {fileID: 523321973654211680}
+  _characterStats: {fileID: 8131153125205919432}
 --- !u!114 &8131153125516999399
 MonoBehaviour:
   m_ObjectHideFlags: 0
