@@ -11156,7 +11156,7 @@ MonoBehaviour:
   stopToAttackDistance: 1
   enemyTag: Player
   weapon: {fileID: 510020851}
-  raycastThickness: 10
+  raycastThickness: 1
   attackPoint: {fileID: 1818070664}
 --- !u!114 &510020856
 MonoBehaviour:
@@ -18955,6 +18955,7 @@ MonoBehaviour:
   weaponManager: {fileID: 219000508}
   playerInput: {fileID: 1954299501}
   fireActionName: Fire
+  interactor: {fileID: 0}
 --- !u!4 &2020315506 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8997996947095583982, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
@@ -23915,7 +23916,7 @@ MonoBehaviour:
   stopToAttackDistance: 1
   enemyTag: Player
   weapon: {fileID: 5866666020813191394}
-  raycastThickness: 10
+  raycastThickness: 1
   attackPoint: {fileID: 438473359}
 --- !u!114 &5866666020813191392
 MonoBehaviour:
