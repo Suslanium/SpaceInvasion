@@ -32,6 +32,7 @@ public class PlayerCreator : MonoBehaviour, IInteractable
         if (UIDocument != null)
         {
             Time.timeScale = 0.0f;
+            Time.fixedDeltaTime = Time.deltaTime * Time.timeScale;
 
             playerInput.enabled = false;
             UIDocument.SetActive(true);
