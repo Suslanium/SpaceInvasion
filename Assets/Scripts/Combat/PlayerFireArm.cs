@@ -108,6 +108,7 @@ public abstract class PlayerFireArm : Firearm
         {
             aimAnchor = gameObject.transform;
         }
+        currentBullets = maxBullets;
         isEquipped = false;
         Equip();
     }
