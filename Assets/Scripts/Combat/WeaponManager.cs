@@ -17,6 +17,7 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private WeaponSway swayModule;
     [SerializeField] private Recoil recoilModule;
     [SerializeField] private StarterAssets.FirstPersonController playerController;
+    [SerializeField] private CharacterStats _characterStats;
     private GameObject currentWeaponGameobject;
     private PlayerFireArm currentWeaponScript;
     private PlayerMeleeWeapon currentMeleeWeapon;
@@ -27,6 +28,10 @@ public class WeaponManager : MonoBehaviour
     private void Start()
     {
         _playerHero = PlayerRepository.PlayerHero;
+        if (_playerHero != null)
+        {
+            _characterStats.InitStats(_playerHero.HealthPoints, _playerHero.ArmorPoints);
+        }
         if (weaponParent == null)
         {
             weaponParent = transform;

@@ -20,9 +20,11 @@ public class RoomBehaviour : MonoBehaviour
     [SerializeField] private BoxCollider trigger;
     [SerializeField] private int enemyCounter = 0;
     private LevelInfo levelInfo;
+    private TriggerDoor startTrigger;
 
     public void UpdateRoom(bool[] status)
     {
+        startTrigger = gameObject.GetComponentInChildren<TriggerDoor>();
         GameObject levelObject = GameObject.FindGameObjectWithTag("LevelInfo");
         levelInfo = levelObject.GetComponent<LevelInfo>();
 
@@ -53,6 +55,8 @@ public class RoomBehaviour : MonoBehaviour
             {
                 GameObject newEnemy = Instantiate(enemyShooter[Random.Range(0, enemyShooter.Length)], spawnPointsShoot[i].position, spawnPointsShoot[i].rotation) as GameObject;
                 newEnemy.transform.SetParent(spawnPointsShoot[i]);
+                newEnemy.GetComponent<CharacterStats>().SetOwnerRoom(this);
+                startTrigger.AddEnemy(newEnemy.GetComponent<CharacterControlModule>());
                 enemyCounter++;
             }
         }
@@ -63,6 +67,8 @@ public class RoomBehaviour : MonoBehaviour
             {
                 GameObject newEnemy = Instantiate(enemyAttacking[Random.Range(0, enemyAttacking.Length)], spawnPointsAttacking[i].position, spawnPointsAttacking[i].rotation) as GameObject;
                 newEnemy.transform.SetParent(spawnPointsAttacking[i]);
+                newEnemy.GetComponent<CharacterStats>().SetOwnerRoom(this);
+                startTrigger.AddEnemy(newEnemy.GetComponent<CharacterControlModule>());
                 enemyCounter++;
             }
         }
@@ -73,6 +79,8 @@ public class RoomBehaviour : MonoBehaviour
             {
                 GameObject newEnemy = Instantiate(enemyTurret[Random.Range(0, enemyTurret.Length)], spawnPointsTurret[i].position, spawnPointsTurret[i].rotation) as GameObject;
                 newEnemy.transform.SetParent(spawnPointsTurret[i]);
+                newEnemy.GetComponent<CharacterStats>().SetOwnerRoom(this);
+                startTrigger.AddEnemy(newEnemy.GetComponent<CharacterControlModule>());
                 enemyCounter++;
             }
         }

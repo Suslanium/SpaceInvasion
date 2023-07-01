@@ -40,19 +40,17 @@ public class MenuUIController : MonoBehaviour
         _backButton.clicked += OnBackButtonClicked;
     }
 
-    private void Update()
-    {
-        
-    }
-
     private void OnSettingsButtonClicked()
     {
         _menuButtonsContainer.Clear();
         _menuButtonsContainer.Add(_settingsElements);
+        _musicSlider.value = (int)(PlayerPrefs.GetFloat("MusicVolumeSettings", 1.0f) * 100);
+        Debug.Log(PlayerPrefs.GetFloat("MusicVolumeSettings", 1.0f));
     }
 
     private void OnBackButtonClicked()
     {
+        PlayerPrefs.SetFloat("MusicVolumeSettings", _musicSlider.value / 100.0f);
         _menuButtonsContainer.Clear();
         _menuButtonsContainer.Add(_startButton);
         _menuButtonsContainer.Add(_settingsButton);
