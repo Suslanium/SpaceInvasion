@@ -2023,7 +2023,7 @@ MonoBehaviour:
   originalPosition: {fileID: 4112794246911980861}
   aimAnchor: {fileID: 0}
   aimMoveSpeed: 3
-  damage: 15
+  damage: 30
   range: 100
   spread: 0
   shootingPoint: {fileID: 4828382146547752288}

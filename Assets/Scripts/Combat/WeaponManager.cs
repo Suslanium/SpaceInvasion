@@ -18,12 +18,19 @@ public class WeaponManager : MonoBehaviour
     [SerializeField] private Recoil recoilModule;
     [SerializeField] private StarterAssets.FirstPersonController playerController;
     [SerializeField] private CharacterStats _characterStats;
+    [SerializeField] private GameObject fighterDominantAbilityPrefab;
+    [SerializeField] private Transform fighterDominantAbilityInstantiationPoint;
+    [SerializeField] private GameObject companionPrefab;
+    [SerializeField] private ParticleSystem aiRings;
+    [SerializeField] private ParticleSystem healRings;
+    [SerializeField] private ParticleSystem immunityRings;
     private GameObject currentWeaponGameobject;
     private PlayerFireArm currentWeaponScript;
     private PlayerMeleeWeapon currentMeleeWeapon;
     private float currentTargetFOV;
     private int currentWeaponIndex = 0;
     private PlayerHero _playerHero;
+    private float nextAbilityTime = 0;
 
     private void Start()
     {
@@ -108,8 +115,8 @@ public class WeaponManager : MonoBehaviour
         {
             recoilModule.SetRecoilSpecs(currentWeaponScript.RotationalRecoil, currentWeaponScript.PositionalRecoil, currentWeaponScript.RecoilSnappiness, currentWeaponScript.RecoilReturnSpeed);
         }
-        playerController.MoveSpeed = currentWeaponScript != null ? currentWeaponScript.MoveSpeed : currentMeleeWeapon.MoveSpeed;
-        playerController.SprintSpeed = currentWeaponScript != null ? currentWeaponScript.SprintSpeed : currentMeleeWeapon.SprintSpeed;
+        playerController.MoveSpeed = (currentWeaponScript != null ? currentWeaponScript.MoveSpeed : currentMeleeWeapon.MoveSpeed) * _playerHero.MovementSpeedMultiplier;
+        playerController.SprintSpeed = (currentWeaponScript != null ? currentWeaponScript.SprintSpeed : currentMeleeWeapon.SprintSpeed) * _playerHero.MovementSpeedMultiplier;
         if (virtualCamera != null)
         {
             virtualCamera.GetCinemachineComponent<Cinemachine.CinemachineBasicMultiChannelPerlin>().m_NoiseProfile = defaultNoise;
@@ -174,6 +181,70 @@ public class WeaponManager : MonoBehaviour
         else if (currentMeleeWeapon != null)
         {
             currentMeleeWeapon.Equip();
+        }
+    }
+
+    public void FirstAbility()
+    {
+        if (Time.time > nextAbilityTime)
+        {
+            InvokeAbility(_playerHero.DominantAbility);
+        }
+    }
+
+    public void SecondAbility()
+    {
+        if (Time.time > nextAbilityTime)
+        {
+            InvokeAbility(_playerHero.RecessiveAbility);
+        }
+    }
+
+    private void InvokeAbility(Ability ability)
+    {
+        switch(ability)
+        {
+            case Ability.TankDominantAbilityName:
+                var hitObjects = Physics.SphereCastAll(gameObject.transform.position, 50f, gameObject.transform.up, 1f);
+                foreach(var hitObject in hitObjects)
+                {
+                    var enemy = hitObject.transform.gameObject.GetComponentInChildren<CharacterControlModule>();
+                    if (enemy != null)
+                    {
+                        enemy.DisableAIForSeconds(5f);
+                    }
+                }
+                nextAbilityTime = Time.time + 25f;
+                aiRings.Play();
+                break;
+            case Ability.TankRecessiveAbilityName:
+                _characterStats.DamageImmunityForSeconds(5f);
+                nextAbilityTime = Time.time + 25f;
+                immunityRings.Play();
+                break;
+            case Ability.FighterDominantAbilityName:
+                if (playerController.Grounded)
+                {
+                    Instantiate(fighterDominantAbilityPrefab, fighterDominantAbilityInstantiationPoint.transform.position, fighterDominantAbilityInstantiationPoint.transform.rotation);
+                }
+                nextAbilityTime = Time.time + 15f;
+                break;
+            case Ability.FighterRecessiveAbilityName:
+                _characterStats.Heal(45);
+                nextAbilityTime = Time.time + 5f;
+                healRings.Play();
+                break;
+            case Ability.MarksmanDominantAbilityName:
+                Instantiate(companionPrefab, fighterDominantAbilityInstantiationPoint.transform.position, fighterDominantAbilityInstantiationPoint.transform.rotation);
+                nextAbilityTime = Time.time + 60f;
+                break;
+            case Ability.MarksmanRecessiveAbilityName:
+                _characterStats.Heal(45);
+                nextAbilityTime = Time.time + 5f;
+                healRings.Play();
+                break;
+            default:
+                break;
         }
     }
 

@@ -10726,7 +10726,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -10810,6 +10810,7 @@ MonoBehaviour:
   deathParticleEffectPrefab: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
   deathEffectLifetime: 2
   healthBar: {fileID: 0}
+  armorBar: {fileID: 0}
 --- !u!114 &307242808046407588
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -25,6 +25,6 @@ public class MusicController : MonoBehaviour
 
         currentSongIndex++;
         
-        Invoke("PlayNextSong", audioSource.clip.length);
+        Invoke("PlayNextSong", songs[currentSongIndex-1].length);
     }
 }
