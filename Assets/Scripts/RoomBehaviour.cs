@@ -28,21 +28,21 @@ public class RoomBehaviour : MonoBehaviour
         GameObject levelObject = GameObject.FindGameObjectWithTag("LevelInfo");
         levelInfo = levelObject.GetComponent<LevelInfo>();
 
-        int precent = 60;
+        int precent = 40;
 
         switch (levelInfo.levelCounter)
         {
             case 0:
-                precent = 60;
+                precent = 40;
                 break;
             case 1:
-                precent = 70;
+                precent = 50;
                 break;
             case 2:
-                precent = 80;
+                precent = 60;
                 break;
             case 3:
-                precent = 90;
+                precent = 70;
                 break;
             default:
                 break;
@@ -77,8 +77,8 @@ public class RoomBehaviour : MonoBehaviour
         {
             if (Random.Range(0, 101) <= precent)
             {
-                GameObject newEnemy = Instantiate(enemyTurret[Random.Range(0, enemyTurret.Length)], spawnPointsAttacking[i].position, spawnPointsAttacking[i].rotation) as GameObject;
-                newEnemy.transform.SetParent(spawnPointsAttacking[i]);
+                GameObject newEnemy = Instantiate(enemyTurret[Random.Range(0, enemyTurret.Length)], spawnPointsTurret[i].position, spawnPointsTurret[i].rotation) as GameObject;
+                newEnemy.transform.SetParent(spawnPointsTurret[i]);
                 newEnemy.GetComponent<CharacterStats>().SetOwnerRoom(this);
                 startTrigger.AddEnemy(newEnemy.GetComponent<CharacterControlModule>());
                 enemyCounter++;
