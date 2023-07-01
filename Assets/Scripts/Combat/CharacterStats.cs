@@ -15,6 +15,7 @@ public class CharacterStats : MonoBehaviour
     private RoomBehaviour _ownerRoom;
 
     public HealthBar healthBar;
+    public ArmorBar armorBar;
 
     void Start()
     {
@@ -32,6 +33,7 @@ public class CharacterStats : MonoBehaviour
         healthBar.SetMaxHealth(maxHealth);
         maxArmor = armor;
         this.armor = armor;
+        armorBar.SetMaxArmor(maxArmor);
     }
 
     public void SetOwnerRoom(RoomBehaviour room)
@@ -55,11 +57,19 @@ public class CharacterStats : MonoBehaviour
         if (armor >= amount)
         {
             armor -= amount;
+            if (armorBar != null)
+            {
+                armorBar.SetArmor(armor);
+            }
             return;
         }
         else if (armor > 0)
         {
             amount -= armor;
+            if (armorBar != null)
+            {
+                armorBar.SetArmor(armor);
+            }
             armor = 0;
         }
         health -= amount;
@@ -93,6 +103,10 @@ public class CharacterStats : MonoBehaviour
             if (armor > maxArmor)
             {
                 armor = maxArmor;
+            }
+            if (armorBar != null)
+            {
+                armorBar.SetArmor(armor);
             }
         }
     }
