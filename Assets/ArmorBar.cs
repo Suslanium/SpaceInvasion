@@ -7,14 +7,14 @@ public class ArmorBar : MonoBehaviour
 {
     public Slider slider;
 
-    public void SetMaxHealth(int health)
+    public void SetMaxArmor(int armor)
     {
-        slider.maxValue = health;
-        slider.value = health;
+        slider.maxValue = armor;
+        slider.value = armor;
     }
 
-    public void SetHealth(int health)
+    public void SetArmor(int armor)
     {
-        slider.value = health;
+        slider.value = armor;
     }
 }
