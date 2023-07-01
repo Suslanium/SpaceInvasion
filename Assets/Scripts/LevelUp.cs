@@ -2,9 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using UnityEngine.InputSystem;
 
-public class Interactive : MonoBehaviour, IInteractable
+public class LevelUp : MonoBehaviour, IInteractable
 {
     private LevelInfo levelInfo;
     private GameObject playerCapsule;
@@ -13,7 +12,7 @@ public class Interactive : MonoBehaviour, IInteractable
     {
         GameObject levelObject = GameObject.FindGameObjectWithTag("LevelInfo");
         levelInfo = levelObject.GetComponent<LevelInfo>();
-        playerCapsule = GameObject.FindGameObjectWithTag("Player");
+        playerCapsule = GameObject.Find("PlayerCapsule");
     }
 
     public void Interact()
@@ -24,6 +23,7 @@ public class Interactive : MonoBehaviour, IInteractable
             {
                 playerCapsule.SetActive(false);
                 playerCapsule.transform.position = new Vector3(0, 0, 4);
+                playerCapsule.transform.rotation = Quaternion.identity;
                 playerCapsule.SetActive(true);
                 levelInfo.levelCounter++;
                 levelInfo.roomCounter = 25;

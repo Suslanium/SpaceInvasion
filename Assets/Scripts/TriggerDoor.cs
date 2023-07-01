@@ -18,13 +18,16 @@ public class TriggerDoor : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        for (int i = 0; i < openDoors.Length; i++)
+        if (other.tag == playerTag)
         {
-            closedDoors[i].SetActive(true);
-            openDoors[i].SetActive(false);
-        }
+            for (int i = 0; i < openDoors.Length; i++)
+            {
+                closedDoors[i].SetActive(true);
+                openDoors[i].SetActive(false);
+            }
 
-        levelInfo.roomCounter--;
-        triggerDoor.SetActive(false);
+            levelInfo.roomCounter--;
+            triggerDoor.SetActive(false);
+        }
     }
 }
