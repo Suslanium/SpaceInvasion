@@ -1062,6 +1062,7 @@ MonoBehaviour:
   weapon: {fileID: 2036471236277500269}
   raycastThickness: 0.01
   useRegularRaycast: 1
+  aiEnabled: 0
   attackPoint: {fileID: 2036471236918526549}
 --- !u!65 &2036471236277500268
 BoxCollider:
@@ -1089,10 +1090,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  health: 0
+  maxArmor: 0
+  armor: 0
+  armorRegenPerSecond: 0
   characterGameobject: {fileID: 2036471236277500180}
   deathParticleEffectPrefab: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
   deathEffectLifetime: 2
-  health: 0
+  healthBar: {fileID: 0}
 --- !u!82 &2036471236277500266
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1213,6 +1218,7 @@ MonoBehaviour:
   moveSpeed: 4
   sprintSpeed: 4
   animationLayerIndex: 2
+  maxBullets: 20
   damage: 5
   range: 50
   spread: 0.3

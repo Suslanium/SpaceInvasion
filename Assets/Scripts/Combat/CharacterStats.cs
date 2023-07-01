@@ -12,6 +12,7 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private GameObject characterGameobject;
     [SerializeField] private GameObject deathParticleEffectPrefab;
     [SerializeField] private float deathEffectLifetime;
+    private bool isGettingRepeatedDamage = false;
     private RoomBehaviour _ownerRoom;
 
     public HealthBar healthBar;
@@ -81,6 +82,32 @@ public class CharacterStats : MonoBehaviour
         if (health > maxHealth)
         {
             health = maxHealth;
+        }
+    }
+
+    public bool StartRepeatedDamage(int damagePerSecond)
+    {
+        if (!isGettingRepeatedDamage)
+        {
+            Debug.Log("Start damage");
+            isGettingRepeatedDamage = true;
+            StartCoroutine(RepeatedDamage(damagePerSecond));
+            return true;
+        }
+        return false;
+    }
+
+    public void StopRepeatedDamage()
+    {
+        isGettingRepeatedDamage = false;
+    }
+
+    private IEnumerator RepeatedDamage(int damagePerSecond)
+    {
+        while (isGettingRepeatedDamage)
+        {
+            Damage(damagePerSecond);
+            yield return new WaitForSeconds(1);
         }
     }
 

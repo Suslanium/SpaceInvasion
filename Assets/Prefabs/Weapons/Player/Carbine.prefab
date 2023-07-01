@@ -455,31 +455,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0733d22b994d3c14b821af2d9d170082, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  holdingIsAllowed: 1
   shootStateName: shoot
   reloadStateName: reload
-  unequipStateName: unequip
-  equipStateName: equip
   firingSound: {fileID: 8300000, guid: 27782b3dadf507a46946603a50860b00, type: 3}
   hasHoldingFireSound: 0
   holdingFireSound: {fileID: 0}
   reloadSound: {fileID: 0}
-  equipSound: {fileID: 0}
   fireRate: 10
   reloadTime: 2.167
+  moveSpeed: 6
+  sprintSpeed: 8
+  animationLayerIndex: 0
+  maxBullets: 50
+  unequipStateName: unequip
+  equipStateName: equip
   equipTime: 1.2
-  holdingIsAllowed: 1
   aimSpeed: 10
   rotationalRecoil: {x: 10, y: 4, z: 1}
   aimRotationalRecoil: {x: 7, y: 3, z: 1}
   positionalRecoil: {x: 0.1, y: 0.1, z: 0.5}
   aimPositionalRecoil: {x: 0.1, y: 0.1, z: 0.5}
+  equipSound: {fileID: 0}
   recoilSnappiness: 3
   recoilReturnSpeed: 10
   aimPosition: {fileID: 4203290829770995783}
   originalPosition: {fileID: 4203290828574473972}
   aimAnchor: {fileID: 0}
-  moveSpeed: 6
-  sprintSpeed: 8
   aimMoveSpeed: 3
   bulletPrefab: {fileID: 8297346382494554851, guid: bb05596dedd3c834680620d1749e45fd, type: 3}
   shootForce: 300
