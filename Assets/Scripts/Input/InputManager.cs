@@ -64,6 +64,22 @@ public class InputManager : MonoBehaviour
         }
     }
 
+	public void OnFirstAbility()
+    {
+		if (weaponManager != null)
+        {
+			weaponManager.FirstAbility();
+        }
+    }
+
+	public void OnSecondAbility()
+    {
+		if (weaponManager != null)
+		{
+			weaponManager.SecondAbility();
+		}
+	}
+
 	public void OnReload()
     {
 		if (weaponManager != null)

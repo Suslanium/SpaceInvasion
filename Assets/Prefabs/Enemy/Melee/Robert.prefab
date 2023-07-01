@@ -1407,7 +1407,7 @@ AudioSource:
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
+      value: 1
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1421,7 +1421,7 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
+      time: 0.31279564
       value: 0
       inSlope: 0
       outSlope: 0
@@ -1436,8 +1436,8 @@ AudioSource:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0
-      value: 1
+      time: 0.23222733
+      value: 1.0435104
       inSlope: 0
       outSlope: 0
       tangentMode: 0
@@ -1460,10 +1460,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxHealth: 100
+  health: 0
+  maxArmor: 0
+  armor: 0
+  armorRegenPerSecond: 0
   characterGameobject: {fileID: 4152860319258663996}
   deathParticleEffectPrefab: {fileID: 1121192042590650, guid: e1b08032bec16ba4eb1ae23cbd572664, type: 3}
   deathEffectLifetime: 2
-  health: 0
+  healthBar: {fileID: 0}
+  armorBar: {fileID: 0}
 --- !u!114 &7208591802603396288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1556,6 +1561,7 @@ MonoBehaviour:
   weapon: {fileID: 7208591802603396288}
   raycastThickness: 1
   useRegularRaycast: 0
+  aiEnabled: 0
   attackPoint: {fileID: 3846221023824967341}
 --- !u!1 &4219725458328086156
 GameObject:

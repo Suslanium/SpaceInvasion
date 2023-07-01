@@ -24,14 +24,14 @@ public class LevelUp : MonoBehaviour, IInteractable
                 playerCapsule.SetActive(false);
                 playerCapsule.transform.position = new Vector3(0, 0, 4);
                 playerCapsule.transform.rotation = Quaternion.identity;
-                playerCapsule.SetActive(true);
                 levelInfo.levelCounter++;
                 levelInfo.roomCounter = 25;
                 SceneManager.LoadScene("GameScene");
             }
             else
             {
-                Debug.Log("Ты зачистил корабль!");
+                Destroy(levelInfo.gameObject);
+                SceneManager.LoadScene("Lobby");
             }
         }
     }

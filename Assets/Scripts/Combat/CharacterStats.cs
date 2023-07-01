@@ -13,6 +13,7 @@ public class CharacterStats : MonoBehaviour
     [SerializeField] private GameObject deathParticleEffectPrefab;
     [SerializeField] private float deathEffectLifetime;
     private bool isGettingRepeatedDamage = false;
+    private bool isImmuneToDamage = false;
     private RoomBehaviour _ownerRoom;
 
     public HealthBar healthBar;
@@ -55,33 +56,36 @@ public class CharacterStats : MonoBehaviour
 
     public void Damage(int amount)
     {
-        if (armor >= amount)
+        if (!isImmuneToDamage)
         {
-            armor -= amount;
-            if (armorBar != null)
+            if (armor >= amount)
             {
-                armorBar.SetArmor(armor);
+                armor -= amount;
+                if (armorBar != null)
+                {
+                    armorBar.SetArmor(armor);
+                }
+                return;
             }
-            return;
-        }
-        else if (armor > 0)
-        {
-            amount -= armor;
-            if (armorBar != null)
+            else if (armor > 0)
             {
-                armorBar.SetArmor(armor);
+                amount -= armor;
+                if (armorBar != null)
+                {
+                    armorBar.SetArmor(armor);
+                }
+                armor = 0;
             }
-            armor = 0;
-        }
-        health -= amount;
-        if (healthBar != null)
-        {
-            healthBar.SetHealth(health);
-        }
-        
-        if (health <= 0)
-        {
-            Die();
+            health -= amount;
+            if (healthBar != null)
+            {
+                healthBar.SetHealth(health);
+            }
+
+            if (health <= 0)
+            {
+                Die();
+            }
         }
     } 
 
@@ -99,12 +103,24 @@ public class CharacterStats : MonoBehaviour
     {
         if (!isGettingRepeatedDamage)
         {
-            Debug.Log("Start damage");
             isGettingRepeatedDamage = true;
             StartCoroutine(RepeatedDamage(damagePerSecond));
             return true;
         }
         return false;
+    }
+
+    public void DamageImmunityForSeconds(float seconds)
+    {
+        isImmuneToDamage = true;
+        StartCoroutine(StopDamageImmunity(seconds));
+    }
+
+    private IEnumerator StopDamageImmunity(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        isImmuneToDamage = false;
+        yield return null;
     }
 
     public void StopRepeatedDamage()

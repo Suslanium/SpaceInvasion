@@ -23,70 +23,100 @@ public class CharacterControlModule : MonoBehaviour
         aiEnabled = true;
     }
 
+    public void DisableAIForSeconds(float seconds)
+    {
+        if (aiEnabled)
+        {
+            aiEnabled = false;
+            currentEnemy = null;
+            if (movementModule != null)
+            {
+                movementModule.RemoveTarget();
+                movementModule.SuspendMovementForSeconds(seconds, true);
+            }
+            if (lookModule != null)
+            {
+                lookModule.RemoveTarget();
+            }
+            weapon.StopHoldingAttack();
+            StartCoroutine(EnableAIAfterDelay(seconds));
+        }
+    }
+
+    private IEnumerator EnableAIAfterDelay(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        aiEnabled = true;
+        yield return null;
+    }
+
     void Update()
     {
-        if (currentEnemy != null)
+        if (aiEnabled)
         {
-            if (Vector3.Distance(transform.position, currentEnemy.transform.position) < visionDistance)
+            if (currentEnemy != null)
             {
-                if (Vector3.Distance(transform.position, currentEnemy.transform.position) < attackDistance)
+                if (Vector3.Distance(transform.position, currentEnemy.transform.position) < visionDistance)
                 {
-                    RaycastHit hit;
-                    if ((!useRegularRaycast && Physics.SphereCast(attackPoint.transform.position, raycastThickness, attackPoint.transform.forward, out hit)) || (useRegularRaycast && Physics.Raycast(attackPoint.transform.position, attackPoint.transform.forward, out hit)))
+                    if (Vector3.Distance(transform.position, currentEnemy.transform.position) < attackDistance)
                     {
-                        if (hit.transform.gameObject == currentEnemy)
+                        RaycastHit hit;
+                        if ((!useRegularRaycast && Physics.SphereCast(attackPoint.transform.position, raycastThickness, attackPoint.transform.forward, out hit)) || (useRegularRaycast && Physics.Raycast(attackPoint.transform.position, attackPoint.transform.forward, out hit)))
                         {
-                            if (weapon.HoldingIsAllowed)
+                            if (hit.transform.gameObject == currentEnemy)
                             {
-                                weapon.StartHoldingAttack();
+                                if (weapon.HoldingIsAllowed)
+                                {
+                                    weapon.StartHoldingAttack();
+                                }
+                                else
+                                {
+                                    float timeout = weapon.Attack();
+                                    if (timeout != 0f && suspendMovementOnAttack && movementModule != null)
+                                    {
+                                        movementModule.SuspendMovementForSeconds(timeout, false);
+                                    }
+                                }
                             }
                             else
                             {
-                                float timeout = weapon.Attack();
-                                if (timeout != 0f && suspendMovementOnAttack && movementModule != null)
-                                {
-                                    movementModule.SuspendMovementForSeconds(timeout);
-                                }
+                                weapon.StopHoldingAttack();
                             }
-                        } 
-                        else
-                        {
-                            weapon.StopHoldingAttack();
                         }
                     }
+                }
+                else
+                {
+                    currentEnemy = null;
+                    if (movementModule != null)
+                    {
+                        movementModule.RemoveTarget();
+                    }
+                    if (lookModule != null)
+                    {
+                        lookModule.RemoveTarget();
+                    }
+                    weapon.StopHoldingAttack();
                 }
             }
             else
             {
-                currentEnemy = null;
-                if (movementModule != null)
+                var visibleObjects = Physics.OverlapSphere(transform.position, visionDistance);
+                foreach (var gameObj in visibleObjects)
                 {
-                    movementModule.RemoveTarget();
-                }
-                if (lookModule != null)
-                {
-                    lookModule.RemoveTarget();
-                }
-                weapon.StopHoldingAttack();
-            }
-        }
-        else if (aiEnabled)
-        {
-            var visibleObjects = Physics.OverlapSphere(transform.position, visionDistance);
-            foreach(var gameObj in visibleObjects)
-            {
-                if (gameObj.tag == enemyTag && gameObj.transform.gameObject != gameObject)
-                {
-                    currentEnemy = gameObj.transform.gameObject;
-                    if(movementModule != null)
+                    if (gameObj.tag == enemyTag && gameObj.transform.gameObject != gameObject)
                     {
-                        movementModule.SetTarget(currentEnemy.transform, stopToAttackDistance);
+                        currentEnemy = gameObj.transform.gameObject;
+                        if (movementModule != null)
+                        {
+                            movementModule.SetTarget(currentEnemy.transform, stopToAttackDistance);
+                        }
+                        if (lookModule != null)
+                        {
+                            lookModule.SetTarget(currentEnemy.transform);
+                        }
+                        break;
                     }
-                    if (lookModule != null)
-                    {
-                        lookModule.SetTarget(currentEnemy.transform);
-                    }
-                    break;
                 }
             }
         }

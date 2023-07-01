@@ -33,7 +33,7 @@ public class MovementModule : MonoBehaviour
         currentTarget = null;
     }
 
-    public void SuspendMovementForSeconds(float seconds)
+    public void SuspendMovementForSeconds(float seconds, bool returnToIdle)
     {
         if (navMeshAgent.enabled)
         {
@@ -43,6 +43,11 @@ public class MovementModule : MonoBehaviour
             navMeshAgent.velocity = Vector3.zero;
             navMeshAgent.enabled = false;
             isSuspended = true;
+            if (returnToIdle)
+            {
+                isWalking = false;
+                animator.CrossFade(idleStateName, animationLayerIndex);
+            }
             StartCoroutine(ResumeExecution(seconds));
         }
     }

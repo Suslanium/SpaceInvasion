@@ -51,10 +51,11 @@ public class LevelGenerator : MonoBehaviour
             }
         }
         generator.GenerateNavMesh();
-        for (int i = 0; i < rooms.Count; i++)
+        for (int i = 1; i < rooms.Count; i++)
         {
             rooms[i].DisableRoom();
         }
+        GameObject.FindGameObjectWithTag("LevelInfo").GetComponent<LevelInfo>().EnablePlayer();
     }
 
     void GenerateMaze()
