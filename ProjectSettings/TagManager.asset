@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - CinemachineTarget
+  - Enemy
+  - Exit
+  - LevelInfo
   layers:
   - Default
   - TransparentFX
@@ -11,9 +15,9 @@ TagManager:
   - PostProcess
   - Water
   - UI
-  - 
-  - 
-  - 
+  - Player
+  - PlayerBullet
+  - Enemy
   - 
   - 
   - 
